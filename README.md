@@ -21,13 +21,13 @@ Scenarios for July 2029 (share by count): conservative 17% · base 28% · accele
 
 | File | What it is |
 |---|---|
-| `systems_le10kw_2025.csv.gz`, `systems_le10kw_2026.csv.gz` | **One row per system** (0 < kW ≤ 10) connected from Jan 2025 to Aug 2026, with the inverter classification. 779,378 + 416,236 rows. Gzip-compressed CSV, UTF-8. |
+| `systems/systems_le10kw_<year>.csv.gz` (2018 … 2026) | **One row per system** (0 < kW ≤ 10) connected in that year, with the inverter classification, one file per year from 2018 to Aug 2026 (about 3.8 million rows in total). Gzip-compressed CSV, UTF-8. |
 | `monthly_micro_share_le10kw.csv` | Monthly aggregate since 2018: counts and kW by inverter type, shares, 3-month smoothing, provisional flag. |
 | `micro_brands_le10kw_2025-01_2026-04.csv` | Microinverter brand ranking (systems and kW) for Jan 2025–Apr 2026. |
 | `forecast_monthly_to_2029-07.csv`, `forecast_checkpoints.csv` | Scenario projection, monthly and at July checkpoints. |
 | `chart_measured.png`, `chart_forecast.png` | The two charts. |
 
-### Columns of `systems_le10kw_*.csv.gz`
+### Columns of `systems/systems_le10kw_*.csv.gz`
 
 | Column | Meaning |
 |---|---|
@@ -51,7 +51,7 @@ No personal data is included (owner name, tax id and coordinates were dropped).
 ## Definitions and caveats
 
 - **Band**: 0 < system power ≤ 10 kW, inclusive. **On-grid** = every system in the band except hybrid (battery) inverters (0.33% of systems).
-- **Classification** is rule-based on the free-text brand and model fields. Systems mixing a string inverter and microinverters on one record count as micro. About 6% of systems have an unrecognised model and are counted as `normal`.
+- **Classification** is rule-based on the free-text brand and model fields, applied identically to every year. Systems mixing a string inverter and microinverters on one record count as micro. About 6% of systems in 2025–26 have an unrecognised model and are counted as `normal`; that share is higher in 2018–2020, when more records carry a blank or garbled manufacturer, so early-year micro shares are a floor rather than an exact value (see `n_unknown` in the monthly file).
 - **Provisional months.** ANEEL keeps adding connections to a month for 3–4 months after it ends. A month is flagged provisional while its count is below 90% of the previous three months' mean. Provisional months **read high**: the states that report early (MG, RJ, SP) are the high-micro states; the ones still missing run at 4–12%. Restricted to the same states, the unfinished months sit only ~1 pp above their settled level. **Do not quote May–Aug 2026 shares.** July 2026 is ~34% filled and reads 22.3%; when completed it should land near 17%.
 - **Projection**: logistic curve toward a declared ceiling (20 / 38 / 55%), initial slope matched to the measured OLS slope (post-step drift, whole-window pace, 1.5× whole-window pace), anchored on the mean of the last six settled months. Measured = solid, projected = scenario assumption.
 
